@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/yap"
+    username: yapadmin
+    password: password
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: TRACE
