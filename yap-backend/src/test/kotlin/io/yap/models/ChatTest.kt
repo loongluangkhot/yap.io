@@ -35,4 +35,16 @@ class ChatTest {
 
         assertTrue(chat.getMessages().contains(message))
     }
+
+    @Test
+    fun ShouldBeAbleToCheckIfUserExists() {
+        val user = User("oliverLeChat")
+        val user2 = User("ElmoLeChien")
+        val chat = Chat("MeowMeow")
+
+        chat.admit(user)
+
+        assertTrue(chat.hasUser(user))
+        assertFalse(chat.hasUser(user2))
+    }
 }

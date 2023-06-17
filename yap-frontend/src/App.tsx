@@ -1,47 +1,48 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { client } from "./clients/WebSocketClient";
+import axios from "axios";
+import { IChat, IChatCreationRequest } from "./models/Chat";
 
 function App() {
-  const [ready, setready] = useState(false);
+  const [chat, setchat] = useState<IChat | null>(null);
 
   useEffect(() => {
-    client.onConnect = () => setready(true);
-    client.activate();
-  }, []);
-
-  useEffect(() => {
-    if (!ready) return;
-    const subscription = client.subscribe("/topic/chat/1", (message) =>
-      console.log(message.body)
-    );
-    return () => subscription.unsubscribe();
-  }, [ready]);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const message = formData.get("message")?.toString();
-    console.log(message);
-    client.publish({
-      destination: "/app/chat/1",
-      body: JSON.stringify({
-        id: 123,
-        from: "Long",
-        message,
-        time: Date.now,
-      }),
-    });
-  };
+    if (!chat) return;
+    console.log("chat is created");
+    console.log(chat);
+  }, [chat]);
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="message">message</label>
-        <input id="message" name="message"/>
-      </form>
+      <CreateChat onChatCreation={setchat} />
     </div>
   );
 }
+
+interface ICreateChatProps {
+  onChatCreation: (chat: IChat) => void;
+}
+
+const CreateChat = (props: ICreateChatProps) => {
+  const [chatName, setChatName] = useState("CHATNAME");
+  const [username, setUsername] = useState("USERNAME");
+
+  const handleClick = async () => {
+    const payload: IChatCreationRequest = {
+      chatName: chatName,
+      username: username,
+    };
+    const res = await axios.post("https://localhost:8080/chat", payload);
+    props.onChatCreation(res.data);
+  };
+
+  return (
+    <div>
+      <input value={chatName} onChange={(i) => setChatName(i.target.value)} />
+      <input value={username} onChange={(i) => setUsername(i.target.value)} />
+      <button onClick={handleClick}>+</button>
+    </div>
+  );
+};
 
 export default App;
