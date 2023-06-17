@@ -29,7 +29,7 @@ class ChatTest {
     fun shouldBeAbleToPostMessage() {
         val user = User("oliverLeChat")
         val chat = Chat("laLangueFrancaise")
-        val message = Message(user, "Bonjour!")
+        val message = Message(user.id, "Bonjour!")
 
         chat.post(message)
 
