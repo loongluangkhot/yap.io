@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "type": "gradle",
+            "name": "test",
+            "tasks": ["test"],
+        },
+        {
+            "type": "gradle",
+            "name": "bootRun:local",
+            "tasks": ["bootRun"],
+            "environment": {
+                "spring.profiles.active": "local"
+            },
+        },
+    ]
+}
